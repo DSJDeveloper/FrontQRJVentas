@@ -21,7 +21,8 @@ export default createVuetify({
   theme: {
     defaultTheme: 'PurpleTheme',
     themes: {
-      PurpleTheme
+      PurpleTheme,
+      
     }
   },
   defaults: {
@@ -30,6 +31,12 @@ export default createVuetify({
       rounded: 'md'
     },
     VTextField: {
+      rounded: 'sm',
+      density: "compact",
+      color: "primary",
+      variant: "outlined"
+    },
+    VDateInput : {
       rounded: 'sm',
       density: "compact",
       color: "primary",

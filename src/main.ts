@@ -10,14 +10,14 @@ import { PerfectScrollbarPlugin } from 'vue3-perfect-scrollbar';
 import VueApexCharts from 'vue3-apexcharts';
 import VueTablerIcons from 'vue-tabler-icons';
 
-import { fakeBackend } from '@/utils/helpers/fake-backend';
+// import { fakeBackend } from '@/utils/helpers/fake-backend';
 
 // print
 import print from 'vue3-print-nb';
 import i18n from './plugins/i18n';
 
 const app = createApp(App);
-fakeBackend();
+// fakeBackend();
 app.use(router);
 app.use(i18n);
 app.use(PerfectScrollbarPlugin);

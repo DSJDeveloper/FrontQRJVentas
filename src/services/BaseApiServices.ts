@@ -53,7 +53,7 @@ export default class BaseApiServices {
             sort.forEach((el: { key: string; order: string; }) => {
                 sorts.push({
                     Field: el.key,
-                    Type: el.order.toUpperCase()
+                    Type: el.order
                 })
             });
             url += `&sort=${encodeURIComponent(JSON.stringify(sorts))}`
