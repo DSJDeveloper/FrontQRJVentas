@@ -1,0 +1,51 @@
+<template>
+  <BaseList title="Listado de Pedidos" api="Orders" :headers="_headers" :readonly="true" :customstatus="true">
+    <template v-slot:[`item.NetAmount`]="{ value }">
+      <i18n-n :value="value"></i18n-n>
+    </template>
+    <template v-slot:[`item.TaxAmount`]="{ value }">
+      <i18n-n :value="value"></i18n-n>
+    </template>
+    <template v-slot:[`item.Total`]="{ value }">
+      <i18n-n :value="value" />
+    </template>
+
+    <template v-slot:[`item.DateOrder`]="{ value }">
+      <i18n-d format="short" :value="value"></i18n-d>
+    </template>
+
+    <template v-slot:[`item.Status`]="{ value }">
+      <div class="text-start">
+        <v-chip
+          :color="value == 2 ? 'success' : value == 1 ? 'warning' : 'accent'"
+          :text="value == 2 ? 'Sincronizado' : value == 1 ? 'No Sincronizado' : 'Anulado'"
+          class="text-uppercase"
+          size="small"
+          label
+        ></v-chip>
+      </div>
+    </template>
+
+  </BaseList>
+</template>
+
+<script setup lang="ts">
+import BaseList from '@/components/shared/BaseList.vue';
+
+const _headers: any = [
+  { title: '# Pedido', key: 'NroOrder', align: 'start', width: 120 },
+  { title: 'RIF', key: 'RIFClient', align: 'start', width: 120 },
+  { title: 'Cliente', key: 'Client', align: 'start' },
+  { title: 'Fecha', key: 'DateOrder', align: 'start', width: 100 },
+  { title: 'Código Vendedor', key: 'CodeSeller', align: 'center', width: 10 },
+  { title: 'Observación', key: 'Observation', align: 'start', width: 20 },
+  { title: 'Sub Total', key: 'NetAmount', align: 'end', width: 100 },
+  { title: 'Impuesto', key: 'TaxAmount', align: 'end', width: 100 },
+  { title: 'Total', key: 'Total', align: 'end', width: 100 },
+  { title: 'Estatus', key: 'Status', align: 'start', width: 110 },
+  { title: 'Id', key: 'Id', align: ' d-none' }
+];
+</script>
+
+<style scoped>
+</style>
