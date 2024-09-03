@@ -66,7 +66,6 @@ export default class AuthService {
                     'Content-Type': 'application/json'
                 }
             })
-            debugger
             const response = await rest.json()
             if (response.errors.length > 0) {
                 this.error.value = response.errors.join()

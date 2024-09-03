@@ -36,13 +36,7 @@ router.beforeEach(async (to, from, next) => {
   const publicPages = ['/auth/login'];
   const authRequired = !publicPages.includes(to.path);
   const auth = new useTokenStore().isSelectCompany
-  // if (authRequired && !auth) {
-  //   next(publicPages[0])
-  // } else {
-  //   next()
-  // }
-debugger
-  // const auth: AuthStore = useAuthStore();
+
   
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (authRequired && !auth) {

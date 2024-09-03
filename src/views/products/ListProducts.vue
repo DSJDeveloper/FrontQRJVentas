@@ -1,5 +1,5 @@
 <template>
-  <BaseList title="Listado de SKU" api="SKU" :headers="_headers" :readonly="true">
+  <BaseList title="Listado de SKU" api="SKU" :headers="_headers" :readonly="true" :customstatus="false">
     <template v-slot:[`item.Price`]="{ value }">
       {{ Number(value).toLocaleString() }}
     </template>

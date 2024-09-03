@@ -30,7 +30,10 @@ export default createVuetify({
       rounded: 'md'
     },
     VTextField: {
-      rounded: 'lg'
+      rounded: 'sm',
+      density: "compact",
+      color: "primary",
+      variant: "outlined"
     },
     VTooltip: {
       // set v-tooltip default location to top

@@ -20,8 +20,7 @@ export default class BaseApiServices {
         return `${getURLApi()}/${this.baseapi.value}`
     }
     protected getheaders() {
-        console.log(getTokenAuthorization())
-        console.log(this.tokenlogin)
+        
         return {
             'Authorization': getTokenAuthorization(),
             'TokenLogin': this.tokenlogin,
@@ -60,7 +59,7 @@ export default class BaseApiServices {
             url += `&sort=${encodeURIComponent(JSON.stringify(sorts))}`
         }
         const _header = this.getheaders();
-        console.log(_header)
+        
         const rest = await fetch(url, {
             method: 'GET',
             headers: this.getheaders()
