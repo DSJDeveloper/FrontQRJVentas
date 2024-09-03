@@ -1,69 +1,80 @@
 import type { IResultAuth } from '@/interfaces/IResultAuth'
 import type { IResultLogin } from '@/interfaces/IResultLogin'
 import { router } from '@/router'
-import { defineStore } from 'pinia'
+// import { defineStore } from 'pinia'
 
 
-export const useTokenStore = defineStore({
-  id: 'tokenStore',
-  state: () => (
-    { result: null } as unknown as IResultLogin
-  ),
-  getters: {
-    getToken: (state) => {
-      return sessionStorage.getItem('_token')
-    }
-    ,
-    getTokenLogin: (state) => {
-      return sessionStorage.getItem('_tokenlogin')?.toString()
-    },
-    isAuthenticated: (state) => {
-      const _token = sessionStorage.getItem('_token')
-      return (_token != null && _token.length > 0)
-    },
-    isSelectCompany: (state) => {
-      const _token = sessionStorage.getItem('_tokenlogin')
-      return (_token != null && _token.length > 0)
-    },
-    getCompany: (state) => {
-      const _resultjson = sessionStorage.getItem('infotoken')
-      if (_resultjson != null && _resultjson.length > 0){
-        return JSON.parse(_resultjson).name
-      }
-      return ""
-    }
-  },
-  actions: {
-    setResultLogin(resultlogin: IResultLogin | null) {
-      this.companys = resultlogin?.companys
-      this.email = resultlogin?.email
-      this.token = resultlogin?.token
+export default class useTokenStore {
 
-      sessionStorage.setItem('_token', resultlogin?.token ?? "")
-      sessionStorage.removeItem('_tokenlogin')
-    },
-    setLogin(resultlogin: IResultAuth | null) {
+  public get getToken() {
+    return this.InfoLogin?.token
+  }
+  public get name() {
+    return this.InfoAuth?.name;
+  }
+  public get email() {
 
-      this.email = resultlogin?.email
-      this.token = resultlogin?.token
-      sessionStorage.removeItem('_token')
-      sessionStorage.setItem('_tokenlogin', this.token ?? "")
-      sessionStorage.setItem('infotoken', JSON.stringify(resultlogin))
+    return this.InfoLogin?.email
+  }
+  public get getTokenLogin() {
+    return this.InfoAuth?.token
+  }
+  public get isAuthenticated() {
 
-    },
-    logout(redirect?: boolean) {
-      this.email = ""
-      this.token = ""
-      this.companys = []
-      sessionStorage.removeItem('_tokenlogin')
-      sessionStorage.removeItem('_token')
-      sessionStorage.removeItem('infotoken')
-
-      if ((redirect ?? false)) {
-        router.push({ name: "Login" });
-      }
-    }
-
+    return (this.InfoAuth?.token ?? "").length > 0
 
   }
-})
+
+  public get isSelectCompany() {
+
+    return (this.InfoAuth?.token ?? "").length > 0
+
+  }
+  public get getCompany() {
+
+    return this.InfoAuth?.namecompany ?? ""
+
+  }
+
+  public get companys() {
+    return this.InfoLogin?.companys ?? []
+  }
+
+  protected get InfoLogin(): IResultLogin | null {
+
+    const _resultjson = sessionStorage.getItem('infologin')
+    if (_resultjson != null && _resultjson.length > 0) {
+      return JSON.parse(_resultjson)
+    }
+    return null
+  }
+  protected get InfoAuth(): IResultAuth | null {
+
+    const _resultjson = sessionStorage.getItem('infoauth')
+    if (_resultjson != null && _resultjson.length > 0) {
+      return JSON.parse(_resultjson)
+    }
+    return null
+  }
+  public setResultLogin(resultlogin: IResultLogin | null) {
+    sessionStorage.setItem('infologin', JSON.stringify(resultlogin))
+    sessionStorage.removeItem('infoauth')
+  }
+  public setLogin(resultlogin: IResultAuth | null) {
+    sessionStorage.removeItem('infologin')
+    sessionStorage.setItem('infoauth', JSON.stringify(resultlogin))
+
+  }
+  public logout(redirect?: boolean) {
+
+    sessionStorage.removeItem('infoauth')
+    sessionStorage.removeItem('infologin')
+
+    if ((redirect ?? false)) {
+      router.push({ name: "Login" });
+    }
+  }
+
+
+
+}

@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { SettingsIcon, LogoutIcon, UserIcon } from 'vue-tabler-icons';
-//import { useAuthStore } from '@/stores/auth';
-import { useTokenStore } from '@/stores/useTokenStore'
+import  useTokenStore  from '@/stores/useTokenStore'
 const swt1 = ref(true);
 const swt2 = ref(false);
-const authStore = useTokenStore();
+const authStore = new useTokenStore();
 
 const displayGreeting =()=>{
 

@@ -7,7 +7,7 @@ import { BellIcon, SettingsIcon, SearchIcon, Menu2Icon } from 'vue-tabler-icons'
 // dropdown imports
 import NotificationDD from './NotificationDD.vue';
 import ProfileDD from './ProfileDD.vue';
-import { useTokenStore } from '@/stores/useTokenStore';
+import  useTokenStore  from '@/stores/useTokenStore';
 // import Searchbar from './SearchBarPanel.vue';
 
 const customizer = useCustomizerStore();
@@ -55,7 +55,7 @@ function searchbox() {
       <SearchIcon size="17" stroke-width="1.5" />
     </v-btn>
     
-    <v-sheet> &nbsp; {{ useTokenStore().getCompany }} </v-sheet>
+    <v-sheet> &nbsp; {{ new useTokenStore().getCompany }} </v-sheet>
 
     <!-- <v-sheet v-if="showSearch" class="search-sheet v-col-12">
       <Searchbar :closesearch="searchbox" />

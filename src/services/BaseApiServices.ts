@@ -1,5 +1,5 @@
 import { ComparisonOperators, LogicalOperators, type ListModelFilter, type ListModelSort } from "@/interfaces/IResultBase";
-import { useTokenStore } from "@/stores/useTokenStore";
+import  useTokenStore  from "@/stores/useTokenStore";
 import { getTokenAuthorization, getURLApi } from "@/utils/helpers/helper-api";
 import { ref } from "vue"
 import type { Ref } from "vue"
@@ -12,7 +12,7 @@ export default class BaseApiServices {
     private pagination: any = {}
     constructor(api: string) {
         this.baseapi = ref(api)
-        this.tokenlogin = useTokenStore().getTokenLogin ?? "";
+        this.tokenlogin = new useTokenStore().getTokenLogin ?? "";
     }
     getData = () => this.data;
     getPagination = () => this.pagination;

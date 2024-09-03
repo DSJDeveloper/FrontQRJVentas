@@ -1,6 +1,6 @@
 import { ref } from "vue"
 import type { Ref } from "vue"
-import { useTokenStore } from '@/stores/useTokenStore'
+import useTokenStore from '@/stores/useTokenStore'
 import { router } from '@/router';
 import { getTokenAuthorization, getURLApi } from "@/utils/helpers/helper-api"
 
@@ -8,22 +8,20 @@ export default class AuthService {
     private token: Ref<string>
     private error: Ref<string | null>
 
-
+    private useTokenstore
     constructor() {
         this.token = ref('')
         this.error = ref('')
+        this.useTokenstore = new useTokenStore()
     }
-    // getToken() {
-    //     return this.token
-    // }
     getError() {
         return this.error
     }
     getCompanys() {
-        return useTokenStore().companys ?? []
+        return this.useTokenstore.companys ?? []
     }
     logout() {
-        useTokenStore().logout()
+        this.useTokenstore.logout()
     }
 
     async login(email: string, pass: string): Promise<void> {
@@ -47,7 +45,7 @@ export default class AuthService {
             if (response.errors.length > 0) {
                 this.error.value = response.errors.join()
             } else {
-                useTokenStore().setResultLogin(response.data[0])
+                this.useTokenstore.setResultLogin(response.data[0])
             }
         } catch (e: any) {
             this.error.value = e.message
@@ -58,7 +56,7 @@ export default class AuthService {
         try {
             this.error.value = ""
             this.token.value = "";
-            const tokenlogin = useTokenStore().getToken ?? "";
+            const tokenlogin = this.useTokenstore.getToken ?? "";
             const rest = await fetch(`${getURLApi()}/Auth/SelectCompany?compyid=${id}`, {
                 method: 'GET',
                 headers: {
@@ -68,11 +66,12 @@ export default class AuthService {
                     'Content-Type': 'application/json'
                 }
             })
+            debugger
             const response = await rest.json()
             if (response.errors.length > 0) {
                 this.error.value = response.errors.join()
             } else {
-                useTokenStore().setLogin(response.data[0])
+                this.useTokenstore.setLogin(response.data[0])
                 router.push({ name: 'Default' });
             }
         } catch (e: any) {

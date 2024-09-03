@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import MainRoutes from './MainRoutes';
 import AuthRoutes from './AuthRoutes';
 // import { useAuthStore } from '@/stores/auth';
-import { useTokenStore } from '@/stores/useTokenStore';
+import useTokenStore  from '@/stores/useTokenStore';
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,14 +35,13 @@ router.beforeEach(async (to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
   const publicPages = ['/auth/login'];
   const authRequired = !publicPages.includes(to.path);
-  const usetoken = useTokenStore()
-  const auth = usetoken.isSelectCompany
+  const auth = new useTokenStore().isSelectCompany
   // if (authRequired && !auth) {
   //   next(publicPages[0])
   // } else {
   //   next()
   // }
-
+debugger
   // const auth: AuthStore = useAuthStore();
   
   if (to.matched.some((record) => record.meta.requiresAuth)) {
