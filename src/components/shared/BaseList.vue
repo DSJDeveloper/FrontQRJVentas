@@ -12,8 +12,8 @@
 
     <v-divider></v-divider>
     <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="props.headers" :items="data"
-      :items-length="totalrows" :loading="loading" :search="search" :fixed-footer="true" @update:options="loadItems"
-      items-per-page-text="Registros por página" loading-text="Cargando....">
+      :sort-by="props.sortBy" :items-length="totalrows" :loading="loading" :search="search" :fixed-footer="true"
+      @update:options="loadItems" items-per-page-text="Registros por página" loading-text="Cargando....">
       <template v-slot:loading>
         <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
       </template>
@@ -79,7 +79,7 @@ import { defineProps, onBeforeMount, ref, type Ref } from 'vue';
 const props = defineProps({
   title: { type: String, required: true },
   api: { type: String, required: true },
-  icon: {required: false },
+  icon: { required: false },
   readonly: {
     type: Boolean,
     required: false,
@@ -118,6 +118,11 @@ const props = defineProps({
   headers: {
     type: Array<any>,
     required: false
+  },
+  sortBy: {
+    type: Array<any>,
+    required: false,
+    default: [{}]
   }
 });
 let data = ref([]);

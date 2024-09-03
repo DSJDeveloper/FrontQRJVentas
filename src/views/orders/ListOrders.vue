@@ -1,6 +1,8 @@
 <template>
   <BaseList title="Listado de Pedidos" api="Orders" :headers="_headers" :readonly="true" :customstatus="true"
-    :viewdetail=true v-on:item-view="viewdetail">
+    :viewdetail=true v-on:item-view="viewdetail"
+    :sort-by="[{ key: 'DateOrder', order: 'desc' }]"
+    >
     <template v-slot:[`item.NetAmount`]="{ value }">
       <i18n-n :value="value"></i18n-n>
     </template>
@@ -23,7 +25,7 @@
       </div>
     </template>
   </BaseList>
-  <BaseCardForm :dialog="dialogdetail" @update:dialog-close="dialogdetail=false" :model="model" :title="title">
+  <BaseCardForm :dialog="dialogdetail" @update:dialog-close="dialogdetail = false" :model="model" :title="title">
     <template #content>
       <DetailOrders :model="model" />
     </template>
@@ -39,7 +41,7 @@ import BaseCardForm from '@/components/shared/BaseCardForm.vue';
 import DetailOrders from './DetailOrders.vue';
 let dialogdetail = ref(false);
 let model: any = ref({})
-let title:string=''
+let title: string = ''
 const _headers: any = [
   { title: '# Pedido', key: 'NroOrder', align: 'start', width: 120 },
   { title: 'RIF', key: 'RIFClient', align: 'start', width: 120 },
@@ -58,7 +60,7 @@ const viewdetail = (row: any) => {
   console.log(row);
   dialogdetail.value = true
   model.value = row
-  title=`Pedido # ${row.NroOrder}`;
+  title = `Pedido # ${row.NroOrder}`;
 }
 </script>
 
