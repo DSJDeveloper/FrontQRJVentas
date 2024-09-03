@@ -15,7 +15,7 @@ export class ModelTable implements IModelTable {
   search?: string;
   headers: any[];
   items: any;
-  constructor(headers?: any) {
+  constructor(headers: any) {
     this.loading = true;
     this.items = [];
     this.totalrows=0;

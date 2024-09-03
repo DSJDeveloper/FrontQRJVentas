@@ -2,7 +2,7 @@
     <form>
         <v-row>
             <v-col cols="12" md="2">
-                <v-text-field v-model="_model.RIFClient" autofocus="true" readonly label="RIF Cliente"
+                <v-text-field v-model="_model.RIFClient" autofocus readonly label="RIF Cliente"
                     hide-details></v-text-field>
             </v-col>
             <v-col cols="12" md="2">
@@ -38,7 +38,7 @@
 
     </form>
     <div>
-        <v-data-table v-model:items-per-page="itemsPerPage" :headers="headers" :items="_model.Items" height="400"
+        <v-data-table v-model:items-per-page="itemsPerPage" :headers="tableHeaders" :items="_model.Items" height="400"
             density="compact" :items-length="totalItems" :loading="loading" item-value="CodeSKU">
             <template v-slot:[`item.TaxAmount`]="{ value }">
                 <i18n-n :value="value"></i18n-n>
@@ -55,10 +55,10 @@
 
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
-import { defineProps, onBeforeMount, ref } from 'vue'
+import { defineProps, onBeforeMount, ref,type Ref } from 'vue'
 let _model: any = ref({})
 let itemsPerPage = 10;
-let headers = [
+const tableHeaders:any = [
     {
         title: 'Código',
         align: 'start',
@@ -70,7 +70,7 @@ let headers = [
     { title: 'Total Impuestos', key: 'NetAmount', align: 'end' },
     {
         title: 'Total', key: 'TotalAmount', align: 'end',
-        value: item => item.TaxAmount + item.NetAmount
+        value: (item:any) => (item.TaxAmount + item.NetAmount)
     },
 
 

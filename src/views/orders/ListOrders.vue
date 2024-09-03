@@ -23,7 +23,7 @@
       </div>
     </template>
   </BaseList>
-  <BaseCardForm v-model="dialogdetail" :model="model" :title="title">
+  <BaseCardForm :dialog="dialogdetail" @update:dialog-close="dialogdetail=false" :model="model" :title="title">
     <template #content>
       <DetailOrders :model="model" />
     </template>

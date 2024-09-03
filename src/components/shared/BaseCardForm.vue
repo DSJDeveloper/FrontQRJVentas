@@ -8,7 +8,7 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn text="Cerrar" variant="text" @click="changedialog(false)"></v-btn>
+                <v-btn text="Cerrar" variant="text" @click="closedialog(false)"></v-btn>
             </v-card-actions>
         </v-card>
 
@@ -17,7 +17,7 @@
 
 <script lang="ts" setup>
 import { defineProps, onBeforeMount, ref } from 'vue'
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:dialogClose'])
 
 let props = defineProps<{
     dialog: boolean,
@@ -27,8 +27,8 @@ let props = defineProps<{
 // onBeforeMount(() => {
 //     //_dialog = props.dialog
 // });
-const changedialog = (value: boolean) => {
-    emit('update:modelValue', value)
+const closedialog = (value: boolean) => {
+    emit('update:dialogClose', value)
 }
 </script>
 

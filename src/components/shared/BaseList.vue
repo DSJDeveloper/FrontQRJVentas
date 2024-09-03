@@ -75,29 +75,51 @@
 import BaseApiServices from '@/services/BaseApiServices';
 import { defineProps, onBeforeMount, ref, type Ref } from 'vue';
 
-const props = defineProps<{
-  title?: string;
-  api?: string;
-  icon?: any;
-  readonly?: boolean;
-  canedit?: boolean;
-  candelete?: boolean;
-  customstatus?: boolean;
-  KeyField?: {
-    type: string,
+
+const props = defineProps({
+  title: { type: String, required: true },
+  api: { type: String, required: true },
+  icon: {required: false },
+  readonly: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
+  canedit: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
+  candelete: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
+  customstatus: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
+  KeyField: {
+    type: String,
+    required: false,
     default: "Id"
-  };
-  StatusField?: {
-    type: string,
+  },
+  StatusField: {
+    type: String,
+    required: false,
     default: "Status"
-  };
-  // status?: Map<string, string>;
-  viewdetail?: {
-    type: boolean,
+  },
+  viewdetail: {
+    type: Boolean,
+    required: false,
     default: true
-  };
-  headers?: any[];
-}>();
+  },
+  headers: {
+    type: Array<any>,
+    required: false
+  }
+});
 let data = ref([]);
 let loading = ref(true);
 
@@ -132,14 +154,14 @@ const loadItems = async (params: any) => {
   }
 };
 const setDefaultProps = () => {
-    
+
   if (props.KeyField != null && props.KeyField.length > 0) {
-    _fieldid=props.KeyField
+    _fieldid = props.KeyField
   }
-  
-  
+
+
   if (props.StatusField != null && props.StatusField.length > 0) {
-    _fieldstatus=props.StatusField
+    _fieldstatus = props.StatusField
   }
 }
 onBeforeMount(() => {
