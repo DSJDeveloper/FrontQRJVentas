@@ -3,7 +3,8 @@ import {
     UsersIcon,
   UsersGroupIcon,
   BoxIcon,
-  ListDetailsIcon
+  ListDetailsIcon,
+  BuildingIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -49,17 +50,16 @@ const sidebarItem: menu[] = [
     title: 'Vendedores',
     to: '/sellers/list'
   },
-  
-  // {
-  //   title: 'Clientess',
-  //   icon: UsersIcon,
-  //   to: '/client/list'
-  // },
   { header: 'Usuarios' },
   {
-    title: 'Lista de Usuarios',
+    title: 'Usuarios',
     icon: UsersIcon,
     to: '/users/list'
+  },
+  {
+    title: 'WorkSpaces',
+    icon: BuildingIcon,
+    to: '/workspaces/list'
   },
   // { header: 'Pages' },
   // {

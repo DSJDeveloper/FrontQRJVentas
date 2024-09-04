@@ -30,6 +30,9 @@ let props = defineProps<{
 const closedialog = (value: boolean) => {
     emit('update:dialogClose', value)
 }
+// const opendialog = (value: boolean) => {
+//     emit('update:dialogOpen', value)
+// }
 </script>
 
 <style scoped></style>

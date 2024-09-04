@@ -75,7 +75,12 @@ const MainRoutes = {
       path: '/orders/list',
       component: () => import('@/views/orders/ListOrders.vue')
     }
-    
+    ,
+    {
+      name: 'ListWorkSpaces',
+      path: '/workspaces/list',
+      component: () => import('@/views/workspaces/ListWorkSpaces.vue')
+    }
   ]
 };
 

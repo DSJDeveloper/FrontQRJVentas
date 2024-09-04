@@ -1,8 +1,8 @@
 <template>
   <BaseList title="Listado de Pedidos" api="Orders" :headers="_headers" :readonly="true" :customstatus="true"
-    :viewdetail=true v-on:item-view="viewdetail"
-    :sort-by="[{ key: 'DateOrder', order: 'desc' }]"
-    >
+  
+  v-on:item-add="addrow"
+    :view-detail="true"  v-on:item-view="viewdetail" :sort-by="[{ key: 'DateOrder', order: 'desc' }]">
     <template v-slot:[`item.NetAmount`]="{ value }">
       <i18n-n :value="value"></i18n-n>
     </template>
@@ -28,6 +28,7 @@
   <BaseCardForm :dialog="dialogdetail" @update:dialog-close="dialogdetail = false" :model="model" :title="title">
     <template #content>
       <DetailOrders :model="model" />
+      
     </template>
 
   </BaseCardForm>
@@ -57,10 +58,20 @@ const _headers: any = [
 ];
 
 const viewdetail = (row: any) => {
-  console.log(row);
   dialogdetail.value = true
   model.value = row
   title = `Pedido # ${row.NroOrder}`;
+}
+const addrow = () => {
+    title = "Nuevo Espacio de Trabajo";
+    model.value = {
+        IdPlan: "free",
+        WorkSpace: "",
+        LogoBusiness: "",
+        name: "",
+        email: ""
+    };
+    dialogdetail.value = true;
 }
 </script>
 

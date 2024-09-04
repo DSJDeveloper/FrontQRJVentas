@@ -54,8 +54,6 @@
 </template>
 
 <script setup lang="ts">
-import { RouterView } from 'vue-router';
-
 import { computed, defineProps, onBeforeMount, ref, type Ref } from 'vue'
 import { VDateInput } from 'vuetify/labs/VDateInput'
 

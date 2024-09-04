@@ -1,6 +1,8 @@
 <template>
   
-  <BaseList title="Listado de Clientes" api="Client" :headers="_headers"  :readonly="true"  />
+  <BaseList title="Listado de Clientes" api="Client" :headers="_headers"  :readonly="true"  :view-detail="false"/>
+   
+  
 
 </template>
 
