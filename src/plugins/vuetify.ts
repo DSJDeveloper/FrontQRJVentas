@@ -22,7 +22,7 @@ export default createVuetify({
     defaultTheme: 'PurpleTheme',
     themes: {
       PurpleTheme,
-      
+
     }
   },
   defaults: {
@@ -36,7 +36,7 @@ export default createVuetify({
       color: "primary",
       variant: "outlined"
     },
-    VDateInput : {
+    VDateInput: {
       rounded: 'sm',
       density: "compact",
       color: "primary",
@@ -44,7 +44,14 @@ export default createVuetify({
     },
     VTooltip: {
       // set v-tooltip default location to top
-      location: 'top'
+      location: 'top',
+    },
+    VDataTableServer: {
+      hover: true,
+      fixedHeader:true
+    },
+    VDataTable: {
+      hover: true
     }
   }
 });

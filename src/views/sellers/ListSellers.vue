@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import BaseList from '@/components/shared/BaseList.vue';
+import BaseList from '@/components/Crud/BaseTable.vue';
 import { ref } from "vue"
 let expanded: any = ref([])
 const _headers: any = [

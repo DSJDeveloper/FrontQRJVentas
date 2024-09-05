@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import BaseList from '@/components/shared/BaseList.vue';
+import BaseList from '@/components/Crud/BaseTable.vue';
 
 const _headers: any = [
   { title: 'Código', key: 'ResourceCode', align: 'start', width: 120 },

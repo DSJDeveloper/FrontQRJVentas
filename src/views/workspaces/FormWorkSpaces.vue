@@ -1,46 +1,111 @@
 <template>
+    <v-progress-linear v-if="loading" indeterminate class="mb-2">
+
+    </v-progress-linear>
+
     <form>
-        <v-row v-if="!newRow">
-            <v-col cols="12" md="12">
+
+        <v-row>
+            <v-col v-if="!newrow" cols="12" md="12">
                 <v-text-field v-model="_model.Code" autofocus readonly label="#" hide-details></v-text-field>
             </v-col>
             <v-col cols="12" md="12">
-                <v-text-field v-model="_model.WorkSpace" readonly label="Espacio de Trabajo"
-                    hide-details></v-text-field>
+                <v-text-field v-model="_model.WorkSpace" autofocus label="Espacio de Trabajo" hide-details></v-text-field>
             </v-col>
             <v-col cols="12" md="12">
-                <v-text-field v-model="_model.NameCompany" readonly label="Empresa" hide-details></v-text-field>
-            </v-col>
-        </v-row>
-        <v-row v-else-if="newRow">
-            <v-col cols="12" md="12">
-                <v-text-field v-model="_model.WorkSpace" autofocus label="Espacio de Trabajo"
-                    hide-details></v-text-field>
+                <v-text-field v-model="_model.IdCompany" label="RIF" hide-details></v-text-field>
             </v-col>
             <v-col cols="12" md="12">
-                <v-text-field v-model="_model.NameCompany" label="Empresa" hide-details></v-text-field>
+                <v-text-field v-model="_model.BusinessName" label="Empresa" hide-details></v-text-field>
             </v-col>
         </v-row>
 
     </form>
-
 </template>
 
 <script setup lang="ts">
-import { defineProps, onBeforeMount, ref } from 'vue'
+import type IFormCrud from '@/interfaces/IFormCrud';
+import { defineProps, onBeforeMount, onMounted, ref, type Ref } from 'vue'
+
+import BaseApiServices from '@/services/BaseApiServices';
+import { required } from '@vuelidate/validators';
+
 
 let _model: any = ref({})
+let newrow = ref(false)
+let loading: Ref<boolean> = ref(true)
+const props = withDefaults(defineProps<IFormCrud>(), {});
+const api = new BaseApiServices('Company')
 
+const rules = {
+    WorkSpace: { required }
+}
+onBeforeMount(async () => {
+    try {
 
-let props = defineProps<{
-    model: any,
-    newRow: boolean
-}>();
-onBeforeMount(() => {
-    _model = props.model
+        newrow.value = props?.isNewRow;
+        if (!(props?.isNewRow ?? false)) {
+            if (props.idRow == null) {
+                alert("No se ha definido el ID")
+            }
+            await api.getbyId(props.idRow!)
+            _model.value = api.getData()
+        } else {
+            _model.value = {
+                IdPlan: "free",
+                WorkSpace: "",
+                IdCompany: "",
+                // FiscalAddress: "",
+                BusinessName: "",
+                LogoBusiness: "",
+                name: "",
+                email: ""
+            };
+        }
+        loading.value = false
+    } catch (e) {
+        alert(e);
+    }
 });
+onMounted(() => {
+
+    // console.log(_model.value)
+    // 
+    // console.log(_model.value)
+    // debugger
+})
+const onCreate =async () => {
+    // try {
 
 
+        await api.Add(_model.value)
+
+    // } catch (e) {
+    //     alert(e);
+    // }
+}
+const onUpdate = async () => {
+    // try {
+        newrow.value = false
+        await api.Update(_model.value)
+
+    // } catch (e) {
+    //     alert(e);
+    // }
+    //_model.value = row;
+}
+const onNewRow = (value: boolean) => {
+
+    newrow.value = value
+
+}
+
+
+defineExpose({
+    onNewRow,
+    onUpdate,
+    onCreate
+})
 </script>
 
 <style scoped></style>

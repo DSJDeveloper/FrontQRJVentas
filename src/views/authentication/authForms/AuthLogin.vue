@@ -73,6 +73,7 @@ const getTitle = () => {
 };
 const setcompany = async (el: ICompanys) => {
   step.value = 3;
+  getTitle ();
   loading.value = true;
     try {
     await auth.selectcompany(el._idcompany);
@@ -88,6 +89,7 @@ const setcompany = async (el: ICompanys) => {
   } catch (_er) {
     step.value = 2;
     loading.value = false;
+    getTitle();
     alert(_er);
   } finally {
   }

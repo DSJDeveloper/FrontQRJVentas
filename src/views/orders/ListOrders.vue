@@ -37,8 +37,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import BaseList from '@/components/shared/BaseList.vue';
-import BaseCardForm from '@/components/shared/BaseCardForm.vue';
+import BaseList from '@/components/Crud/BaseTable.vue';
+import BaseCardForm from '@/components/Crud/BaseCardForm.vue';
 import DetailOrders from './DetailOrders.vue';
 let dialogdetail = ref(false);
 let model: any = ref({})

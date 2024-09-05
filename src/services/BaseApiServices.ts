@@ -10,15 +10,18 @@ export default class BaseApiServices {
     private tokenlogin = ""
     private data: any = []
     private pagination: any = {}
-    private endpointget: string = "GetAll"
+    private endpointgetAll: string = "GetAll"
+    private endpointget: string = "Get"
+    private endpointupdate: string = "Update"
+    private endpointadd: string = "Add"
     // public constructor(api: string) {
     //     this.baseapi = ref(api)
     //     this.tokenlogin = new useTokenStore().getTokenLogin ?? "";
     // }
-    public constructor(api: string, endpointget?: string) {
+    public constructor(api: string, endpointgetAll?: string) {
         this.baseapi = ref(api)
         this.tokenlogin = new useTokenStore().getTokenLogin ?? "";
-        this.endpointget = endpointget ?? "GetAll";
+        this.endpointgetAll = endpointgetAll ?? "GetAll";
     }
 
 
@@ -41,7 +44,7 @@ export default class BaseApiServices {
         if (page == null) page = 1
         if (limit <= 0) limit = 50
         if (page <= 0) page = 1
-        let url = `${this.geturl()}/${this.endpointget}?limit=${limit}&page=${page}`
+        let url = `${this.geturl()}/${this.endpointgetAll}?limit=${limit}&page=${page}`
         search ??= ""
         if (search.length > 0) {
 
@@ -80,6 +83,89 @@ export default class BaseApiServices {
         }
         this.data = response.data
         this.pagination = response.pagination
+    }
+    async getbyId(id: string, endpoint?: string | null): Promise<void> {
 
+        let url = `${this.geturl()}/${this.endpointget ?? endpoint}/?id=${id}`
+
+        const _header = this.getheaders();
+
+        const rest = await fetch(url, {
+            method: 'GET',
+            headers: this.getheaders()
+        })
+
+        const response = await rest.json()
+        if (response.errors.length > 0) {
+            this.data = []
+            throw new Error(response.errors.join("<br>"))
+        }
+
+        this.data = response.data[0]
+
+    }
+
+    async Update(model: any, endpoint?: string | null): Promise<void> {
+
+        let url = `${this.geturl()}/${this.endpointupdate ?? endpoint}`
+
+        const _header = this.getheaders();
+
+        const rest = await fetch(url, {
+            method: 'PUT',
+            headers: this.getheaders(),
+            body: JSON.stringify(model),
+        })
+
+        const response = await rest.json()
+        if (response.errors.length > 0) {
+            this.data = null
+            this.geterrors(response.errors)
+        }
+
+        this.data = response.data[0]
+
+    }
+    async Add(model: any, endpoint?: string | null): Promise<void> {
+
+        let url = `${this.geturl()}/${this.endpointadd ?? endpoint}`
+
+        const _header = this.getheaders();
+
+        const rest = await fetch(url, {
+            method: 'POST',
+            headers: this.getheaders(),
+            body: JSON.stringify(model),
+        })
+
+        const response = await rest.json()
+        if (response.errors.length > 0) {
+            this.data = null
+            this.geterrors(response.errors)
+        }
+
+        this.data = response.data[0]
+
+    }
+    protected geterrors(error: any) {
+        if (error.length > 0) {
+            let errors: any = []
+            for (let index = 0; index < error.length; index++) {
+                const el = error[index];
+                if (el.hasOwnProperty("Message")) {
+                    if (el.hasOwnProperty("Field")) {
+                        errors.push(`${el.Field} - ${el.Message}`)
+                    } else {
+                        errors.push(el.Message)
+                    }
+                } else {
+                    errors.push(el.toString())
+                }
+            }
+
+            throw new Error(errors.join("<br>"))
+        } else {
+            throw new Error(error.join("<br>"))
+        }
     }
 }
