@@ -39,6 +39,7 @@
     "vue3-perfect-scrollbar": "2.0.0",
     "vue3-print-nb": "0.1.4",
     "vuetify": "3.6.5",
+    "vuetify3-dialog": "^1.5.1",
     "webpack-plugin-vuetify": "3.0.3",
     "yup": "1.4.0"
   },

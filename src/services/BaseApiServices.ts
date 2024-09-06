@@ -69,8 +69,6 @@ export default class BaseApiServices {
             });
             url += `&sort=${encodeURIComponent(JSON.stringify(sorts))}`
         }
-        const _header = this.getheaders();
-
         const rest = await fetch(url, {
             method: 'GET',
             headers: this.getheaders()
@@ -87,9 +85,6 @@ export default class BaseApiServices {
     async getbyId(id: string, endpoint?: string | null): Promise<void> {
 
         let url = `${this.geturl()}/${this.endpointget ?? endpoint}/?id=${id}`
-
-        const _header = this.getheaders();
-
         const rest = await fetch(url, {
             method: 'GET',
             headers: this.getheaders()
@@ -109,7 +104,6 @@ export default class BaseApiServices {
 
         let url = `${this.geturl()}/${this.endpointupdate ?? endpoint}`
 
-        const _header = this.getheaders();
 
         const rest = await fetch(url, {
             method: 'PUT',
@@ -130,12 +124,31 @@ export default class BaseApiServices {
 
         let url = `${this.geturl()}/${this.endpointadd ?? endpoint}`
 
-        const _header = this.getheaders();
 
         const rest = await fetch(url, {
             method: 'POST',
             headers: this.getheaders(),
             body: JSON.stringify(model),
+        })
+
+        const response = await rest.json()
+        if (response.errors.length > 0) {
+            this.data = null
+            this.geterrors(response.errors)
+        }
+
+        this.data = response.data[0]
+
+    }
+
+    async Post(endpoint: string, model?: any): Promise<void> {
+
+        let url = `${this.geturl()}/${endpoint}`
+
+        const rest = await fetch(url, {
+            method: 'POST',
+            headers: this.getheaders(),
+            body: model != null ? JSON.stringify(model) : null,
         })
 
         const response = await rest.json()

@@ -10,7 +10,8 @@
                 <v-text-field v-model="_model.Code" autofocus readonly label="#" hide-details></v-text-field>
             </v-col>
             <v-col cols="12" md="12">
-                <v-text-field v-model="_model.WorkSpace" autofocus label="Espacio de Trabajo" hide-details></v-text-field>
+                <v-text-field v-model="_model.WorkSpace" autofocus label="Espacio de Trabajo"
+                    hide-details></v-text-field>
             </v-col>
             <v-col cols="12" md="12">
                 <v-text-field v-model="_model.IdCompany" label="RIF" hide-details></v-text-field>
@@ -19,7 +20,7 @@
                 <v-text-field v-model="_model.BusinessName" label="Empresa" hide-details></v-text-field>
             </v-col>
         </v-row>
-
+       
     </form>
 </template>
 
@@ -29,6 +30,7 @@ import { defineProps, onBeforeMount, onMounted, ref, type Ref } from 'vue'
 
 import BaseApiServices from '@/services/BaseApiServices';
 import { required } from '@vuelidate/validators';
+
 
 
 let _model: any = ref({})
@@ -74,20 +76,17 @@ onMounted(() => {
     // console.log(_model.value)
     // debugger
 })
-const onCreate =async () => {
+const onCreate = async () => {
     // try {
-
-
-        await api.Add(_model.value)
-
+    await api.Add(_model.value)
     // } catch (e) {
     //     alert(e);
     // }
 }
 const onUpdate = async () => {
     // try {
-        newrow.value = false
-        await api.Update(_model.value)
+    newrow.value = false
+    await api.Update(_model.value)
 
     // } catch (e) {
     //     alert(e);
@@ -95,9 +94,7 @@ const onUpdate = async () => {
     //_model.value = row;
 }
 const onNewRow = (value: boolean) => {
-
     newrow.value = value
-
 }
 
 

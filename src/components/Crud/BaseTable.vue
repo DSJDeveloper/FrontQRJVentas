@@ -16,11 +16,10 @@
     </v-card-title>
 
     <v-divider></v-divider>
-    <v-data-table-server ref="dtableserver" v-model:items-per-page="itemsPerPage" :headers="props.headers" :items="data" item-value="Id"
-      :show-expand="props.showExpand" :sort-by="props.sortBy" :items-length="totalrows" :loading="loading"
-      
-      :search="search" :fixed-footer="true" @update:options="loadItems" items-per-page-text="Registros por página"
-      loading-text="Cargando....">
+    <v-data-table-server ref="dtableserver" v-model:items-per-page="itemsPerPage" :headers="props.headers" :items="data"
+      item-value="Id" :show-expand="props.showExpand" :sort-by="props.sortBy" :items-length="totalrows"
+      :loading="loading" :search="search" :fixed-footer="true" @update:options="loadItems"
+      items-per-page-text="Registros por página" loading-text="Cargando....">
       <template v-slot:loading>
         <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
       </template>
@@ -174,7 +173,7 @@ let _canadd: Ref<boolean> = ref(true);
 let _viewdetil: Ref<boolean> = ref(true);
 let _lastparams: any = {};
 let savelastparam = true;
-let dtableserver=ref();
+let dtableserver = ref();
 //let _fieldstatus: string = "Status";
 // let _fieldid: string = "Id";
 const emit = defineEmits(['item-view', 'item-edit', 'item-delete', 'item-add'])
@@ -210,12 +209,16 @@ const loadItems = async (params: any) => {
 };
 const onRefresh = async () => {
   savelastparam = false;
-  
+
   await loadItems(_lastparams);
   savelastparam = true;
 };
+const getRows = () => {
+  return data.value;
+}
 defineExpose({
-  onRefresh
+  onRefresh,
+  getRows,
 
 })
 const setDefaultProps = () => {
@@ -265,6 +268,9 @@ onBeforeMount(() => {
   }
 
 });
+
+
+
 const showexpand = computed(() => {
 
   const resulta = props.showExpand ? 'show-expand' : ''
@@ -283,5 +289,4 @@ const showexpand = computed(() => {
 
 // .v-table tbody tr td:nth-child(odd) {
 //       background-color: #13141b;
-// }
-</style>
+// }</style>

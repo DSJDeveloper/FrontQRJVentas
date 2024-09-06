@@ -9,6 +9,7 @@ import '@/scss/style.scss';
 import { PerfectScrollbarPlugin } from 'vue3-perfect-scrollbar';
 import VueApexCharts from 'vue3-apexcharts';
 import VueTablerIcons from 'vue-tabler-icons';
+import { Vuetify3Dialog } from 'vuetify3-dialog'
 
 // import { fakeBackend } from '@/utils/helpers/fake-backend';
 
@@ -26,4 +27,6 @@ app.use(VueTablerIcons);
 
 app.use(print);
 app.use(VueApexCharts);
-app.use(vuetify).mount('#app');
+app.use(vuetify);
+app.use(Vuetify3Dialog);
+app.mount('#app');
