@@ -16,10 +16,7 @@ export default class BaseApiServices {
     private endpointupdate: string = "Update"
     private endpointadd: string = "Add"
     private endpointdel: string = "Delete"
-    // public constructor(api: string) {
-    //     this.baseapi = ref(api)
-    //     this.tokenlogin = new useTokenStore().getTokenLogin ?? "";
-    // }
+
     public constructor(api: string, endpointgetAll?: string) {
         this.baseapi = ref(api)
         this.tokenlogin = new useTokenStore().getTokenLogin ?? "";
@@ -108,7 +105,7 @@ export default class BaseApiServices {
     async Update(model: any, endpoint?: string | null): Promise<void> {
 
         let url = `${this.geturl()}/${isNullOrEmpty(endpoint) ? this.endpointupdate : endpoint}`
-        
+
 
         const rest = await fetch(url, {
             method: 'PUT',
@@ -147,13 +144,12 @@ export default class BaseApiServices {
     async Delete(model: Array<String>, endpoint?: string | null): Promise<void> {
 
         let url = `${this.geturl()}/${isNullOrEmpty(endpoint) ? this.endpointdel : endpoint}`
-
-
-        const rest = await fetchWithTimeout(url, {
+        const rest = await fetch(url, {
             method: 'DELETE',
             headers: this.getheaders(),
             body: JSON.stringify(model),
         })
+    
         const response = await rest.json()
         if (response.errors.length > 0) {
             this.data = null

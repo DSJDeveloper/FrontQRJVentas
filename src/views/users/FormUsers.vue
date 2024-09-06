@@ -1,5 +1,5 @@
 <template>
-    <form autocomplete="off">
+    <form autocomplete="off" v-if="!(props.isdeleterow ?? false)">
         <v-row>
             <v-col cols="12" md="12">
                 <v-text-field v-model="_model.Name" autofocus label="Nombre del Usuario" hide-details></v-text-field>
@@ -16,8 +16,10 @@
             </v-col>
 
         </v-row>
-
     </form>
+    <v-text v-else>
+        ¿Estás seguro de Eliminar el usuario <strong>{{ props.model?.Email }}</strong>?
+    </v-text>
 </template>
 
 <script setup lang="ts">
@@ -28,7 +30,8 @@ import { onBeforeMount, onMounted, defineProps, ref, type Ref } from 'vue';
 import { MailIcon, EyeIcon, EyeOffIcon, LockIcon } from 'vue-tabler-icons';
 import { errorDialog } from "vuetify3-dialog";
 export interface IFormCrudExt extends IFormCrud {
-    idCompany?: String
+    idCompany?: String,
+    isdeleterow?: boolean
 }
 let showpass = ref(false)
 let _model: any = ref({})
@@ -39,31 +42,27 @@ const props = withDefaults(defineProps<IFormCrudExt>(), {});
 
 onBeforeMount(async () => {
     try {
-        props.cardFormRef?.onLoading(true)
+        if (!(props.isdeleterow ?? false)) {
+            props.cardFormRef?.onLoading(true)
+            _disabled.value = true
+            if (!props.isNewRow) {
+                await api.getbyId(props.idRow ?? "")
+                _model.value = api.getData()
+                _model.value.Pass = ""
 
-        _disabled.value = true
-        if (!props.isNewRow) {
-            await api.getbyId(props.idRow ?? "")
-            _model.value = api.getData()
-            _model.value.Pass = ""
-
-        } else {
-            _model.value = { Name: "", Email: "", Pass: "" };
-            _disabled.value = false
+            } else {
+                _model.value = { Name: "", Email: "", Pass: "" };
+                _disabled.value = false
+            }
         }
         props.cardFormRef?.onLoading(false)
-
-
     } catch (e) {
 
         errorDialog({ text: String(e) })
     }
 });
 
-onMounted(async () => {
 
-
-})
 const onCreate = async () => {
     _model.value.password = _model.value.Pass
     if (!isNullOrEmpty(props.idCompany)) {
@@ -80,11 +79,7 @@ const onUpdate = async () => {
 
 }
 const onDelete = async () => {
-    debugger
-
-    await api.Delete([_model.value])
-
-
+    await api.Delete([props.idRow!])
 }
 
 defineExpose({
@@ -92,6 +87,12 @@ defineExpose({
     onUpdate,
     onCreate,
     onDelete
+})
+
+
+onMounted(async () => {
+
+
 })
 </script>
 
