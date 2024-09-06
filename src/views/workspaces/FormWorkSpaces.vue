@@ -1,8 +1,4 @@
 <template>
-    <v-progress-linear v-if="loading" indeterminate class="mb-2">
-
-    </v-progress-linear>
-
     <form>
 
         <v-row>
@@ -30,6 +26,7 @@ import { defineProps, onBeforeMount, onMounted, ref, type Ref } from 'vue'
 
 import BaseApiServices from '@/services/BaseApiServices';
 import { required } from '@vuelidate/validators';
+import { errorDialog } from 'vuetify3-dialog';
 
 
 
@@ -66,7 +63,7 @@ onBeforeMount(async () => {
         }
         loading.value = false
     } catch (e) {
-        alert(e);
+        errorDialog({  text: String(e) })
     }
 });
 onMounted(() => {
@@ -93,13 +90,13 @@ const onUpdate = async () => {
     // }
     //_model.value = row;
 }
-const onNewRow = (value: boolean) => {
-    newrow.value = value
-}
+// const onNewRow = (value: boolean) => {
+//     newrow.value = value
+// }
 
 
 defineExpose({
-    onNewRow,
+    
     onUpdate,
     onCreate
 })

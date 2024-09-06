@@ -7,6 +7,7 @@ import { onMounted, ref, type Ref } from 'vue';
 import AuthService from '@/services/AuthServices';
 import type { ICompanys } from '@/interfaces/ICompanys';
 // import type { IResultAuth } from '@/interfaces/IResultAuth';
+import { MailIcon,LockIcon } from 'vue-tabler-icons';
 // import router from "@/router/index";
 // import type { ICompanys } from '@/interfaces/ICompanys.ts';
 // import type { IResultLogin } from '@/interfaces/IResultLogin';
@@ -121,6 +122,7 @@ onMounted(() => {
           <v-text-field
             v-model="username"
             :rules="emailRules"
+            :prepend-inner-icon="MailIcon"
             label="Email  / Usuario"
             class="mt-4 mb-8"
             required
@@ -138,6 +140,7 @@ onMounted(() => {
             variant="outlined"
             color="primary"
             hide-details="auto"
+            :prepend-inner-icon="LockIcon"
             :append-icon="show1 ? '$eye' : '$eyeOff'"
             :type="show1 ? 'text' : 'password'"
             @click:append="show1 = !show1"

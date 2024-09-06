@@ -22,3 +22,18 @@ export function getTokenAuthorization():string {
 
    return import.meta.env.VITE_API_TOKEN
 }
+
+export async function fetchWithTimeout(resource: RequestInfo | URL, options = {}) {
+    const { timeout=8000  }: { timeout?: number } = options;
+    
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+  
+    const response = await fetch(resource, {
+      ...options,
+      signal: controller.signal  
+    });
+    clearTimeout(id);
+  
+    return response;
+  }

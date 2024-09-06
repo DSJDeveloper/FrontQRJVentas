@@ -1,6 +1,7 @@
 import { ComparisonOperators, LogicalOperators, type ListModelFilter, type ListModelSort } from "@/interfaces/IResultBase";
 import useTokenStore from "@/stores/useTokenStore";
-import { getTokenAuthorization, getURLApi } from "@/utils/helpers/helper-api";
+import { fetchWithTimeout, getTokenAuthorization, getURLApi } from "@/utils/helpers/helper-api";
+import { isNullOrEmpty } from "@/utils/helpers/tools";
 import { ref } from "vue"
 import type { Ref } from "vue"
 
@@ -14,6 +15,7 @@ export default class BaseApiServices {
     private endpointget: string = "Get"
     private endpointupdate: string = "Update"
     private endpointadd: string = "Add"
+    private endpointdel: string = "Delete"
     // public constructor(api: string) {
     //     this.baseapi = ref(api)
     //     this.tokenlogin = new useTokenStore().getTokenLogin ?? "";
@@ -56,8 +58,12 @@ export default class BaseApiServices {
                 Comparison: ComparisonOperators.LIKE
             })
         }
+
         if (filter != null) {
-            url += `&filter=${encodeURIComponent(JSON.stringify(filter))}`
+            const _filter = filter.filter((el) => el.hasOwnProperty("Field") && isNullOrEmpty(el.Field))
+            if (_filter.length > 0) {
+                url += `&filter=${encodeURIComponent(JSON.stringify(_filter))}`
+            }
         }
         if (sort != null && sort.length > 0) {
             let sorts: ListModelSort = []
@@ -84,12 +90,11 @@ export default class BaseApiServices {
     }
     async getbyId(id: string, endpoint?: string | null): Promise<void> {
 
-        let url = `${this.geturl()}/${this.endpointget ?? endpoint}/?id=${id}`
+        let url = `${this.geturl()}/${isNullOrEmpty(endpoint) ? this.endpointget : endpoint}/?id=${id}`
         const rest = await fetch(url, {
             method: 'GET',
             headers: this.getheaders()
         })
-
         const response = await rest.json()
         if (response.errors.length > 0) {
             this.data = []
@@ -102,8 +107,8 @@ export default class BaseApiServices {
 
     async Update(model: any, endpoint?: string | null): Promise<void> {
 
-        let url = `${this.geturl()}/${this.endpointupdate ?? endpoint}`
-
+        let url = `${this.geturl()}/${isNullOrEmpty(endpoint) ? this.endpointupdate : endpoint}`
+        
 
         const rest = await fetch(url, {
             method: 'PUT',
@@ -122,15 +127,33 @@ export default class BaseApiServices {
     }
     async Add(model: any, endpoint?: string | null): Promise<void> {
 
-        let url = `${this.geturl()}/${this.endpointadd ?? endpoint}`
+        let url = `${this.geturl()}/${isNullOrEmpty(endpoint) ? this.endpointadd : endpoint}`
 
 
-        const rest = await fetch(url, {
+        const rest = await fetchWithTimeout(url, {
             method: 'POST',
             headers: this.getheaders(),
             body: JSON.stringify(model),
         })
+        const response = await rest.json()
+        if (response.errors.length > 0) {
+            this.data = null
+            this.geterrors(response.errors)
+        }
 
+        this.data = response.data[0]
+
+    }
+    async Delete(model: Array<String>, endpoint?: string | null): Promise<void> {
+
+        let url = `${this.geturl()}/${isNullOrEmpty(endpoint) ? this.endpointdel : endpoint}`
+
+
+        const rest = await fetchWithTimeout(url, {
+            method: 'DELETE',
+            headers: this.getheaders(),
+            body: JSON.stringify(model),
+        })
         const response = await rest.json()
         if (response.errors.length > 0) {
             this.data = null

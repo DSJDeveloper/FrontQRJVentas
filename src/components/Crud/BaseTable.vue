@@ -11,7 +11,9 @@
       </v-text-field>
       <span v-if="_canadd">
         <v-divider class="mx-1 " inset vertical></v-divider>
-        <v-btn class="text-success" color="success" @click="addItem">Agregar</v-btn>
+        <v-btn class="text-success" color="success" @click="addItem">Agregar
+          
+        </v-btn>
       </span>
     </v-card-title>
 
@@ -46,7 +48,6 @@
 
       <template v-if="_canddel || _candedit || _viewdetil" v-slot:[`item.actions`]="{ item }">
         <div class="d-flex justify-space-around">
-
           <v-icon v-if="_candedit" size="large" @click="editItem(item)">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit error" width="44"
               height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#00abfb" fill="none" stroke-linecap="round"
@@ -56,6 +57,7 @@
               <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
               <path d="M16 5l3 3" />
             </svg>
+            <v-tooltip activator="parent">Editar</v-tooltip>
           </v-icon>
 
           <v-icon v-if="_canddel" size="large" @click="deleteItem(item)">
@@ -67,18 +69,21 @@
                 d="M19 20h-10.5l-4.21 -4.3a1 1 0 0 1 0 -1.41l10 -10a1 1 0 0 1 1.41 0l5 5a1 1 0 0 1 0 1.41l-9.2 9.3" />
               <path d="M18 13.3l-6.3 -6.3" />
             </svg>
+            <v-tooltip activator="parent">Eliminar</v-tooltip>
           </v-icon>
           <v-icon v-if="_viewdetil" size="large" @click="viewItem(item)">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-id-badge" width="44" height="44"
-              viewBox="0 0 24 24" stroke-width="1.5" stroke="#597e8d" fill="none" stroke-linecap="round"
-              stroke-linejoin="round">
-              <path stroke="none" d="M0 0h32v32H0z" fill="none" />
-              <path d="M5 3m0 3a3 3 0 0 1 3 -3h8a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-8a3 3 0 0 1 -3 -3z" />
-              <path d="M12 13m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-              <path d="M10 6h4" />
-              <path d="M9 18h6" />
+
+
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="#016527" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="icon icon-tabler icons-tabler-outline icon-tabler-eye">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+              <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
             </svg>
+            <v-tooltip activator="parent" >Ver detalle</v-tooltip>
           </v-icon>
+
         </div>
 
       </template>
@@ -87,6 +92,7 @@
 </template>
 
 <script setup lang="ts">
+import type { IModelFilter, IModelSort, ListModelFilter } from '@/interfaces/IResultBase';
 import BaseApiServices from '@/services/BaseApiServices';
 import { computed, defineProps, onBeforeMount, ref, type Ref } from 'vue';
 
@@ -146,6 +152,11 @@ const props = defineProps({
     required: false,
     default: [{}]
   },
+  filterDefault: {
+    type: Array<any>,
+    required: false,
+    default: [{}]
+  },
   showExpand: {
     type: Boolean,
     required: false,
@@ -193,7 +204,7 @@ const loadItems = async (params: any) => {
     }
     loading.value = true;
     const apiuser = new BaseApiServices(props.api!, props.endpointget);
-    await apiuser.getAll(null, params?.sortBy, params?.search, params?.itemsPerPage, params?.page);
+    await apiuser.getAll(props?.filterDefault, params?.sortBy, params?.search, params?.itemsPerPage, params?.page);
     data.value = apiuser.getData();
     if (props.showPagination) {
 
@@ -235,8 +246,8 @@ const setDefaultProps = () => {
 onBeforeMount(() => {
   setDefaultProps();
   let showactions = false;
-  //const addviewdetail = props.viewDetail;
-  //_viewdetil.value = addviewdetail;
+
+  _viewdetil.value = props.viewDetail;
 
   // if (props.status == null) {
   //   _statusmap = new Map<string, string>([

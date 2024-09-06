@@ -6,12 +6,13 @@ export default interface IFormCrud {
     // onEdit(row: Ref<any>): void;
     //onUpdate(): void;
     //onCreate(): void;
+    cardFormRef?: any,
     isNewRow: boolean
     idRow?: string,
     model?: any,
-    onSave?(): void;
+    // onSave?(): void;
+    // onDelete?(): void;
 
-
-    onNewRow?(value: boolean): void;
+    //onNewRow?(value: boolean): void;
 
 }
