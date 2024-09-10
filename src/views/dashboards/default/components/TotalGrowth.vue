@@ -1,100 +1,123 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch, type Ref } from 'vue';
+import BaseApiServices from '@/services/BaseApiServices';
 
-const select = ref({ state: 'Today', abbr: 'FL' });
+
+const api = new BaseApiServices('DashboardOrder')
+let chartOptions1: Ref<any> = ref({
+  chart: {
+    type: 'bar',
+    height: 480,
+    fontFamily: `inherit`,
+    foreColor: '#a1aab2',
+    stacked: true,
+  },
+
+  colors: ['#5e35b1', '#ede7f6'],
+  responsive: [
+    {
+      breakpoint: 480,
+      options: {
+        legend: {
+          position: 'bottom',
+          offsetX: -10,
+          offsetY: 0
+        }
+      }
+    }
+  ],
+  plotOptions: {
+    bar: {
+      horizontal: false,
+      columnWidth: '50%'
+    }
+  },
+  xaxis: {
+    type: 'category',
+    categories: [],
+  },
+  legend: {
+    show: true,
+    fontFamily: `'Roboto', sans-serif`,
+    position: 'bottom',
+    offsetX: 20,
+    labels: {
+      useSeriesColors: false
+    },
+    markers: {
+      width: 16,
+      height: 16,
+      radius: 5
+    },
+    itemMargin: {
+      horizontal: 15,
+      vertical: 8
+    }
+  },
+  fill: {
+    type: 'solid'
+  },
+  dataLabels: {
+    enabled: true,
+    enabledOnSeries: undefined,
+    formatter: function (val: number, opts: any) {
+      return val.toLocaleString()
+    }
+  },
+  grid: {
+    show: true
+  },
+  tooltip: {
+    shared: true,
+    intersect: false,
+
+    theme: 'dark'
+  }
+})
+const select = ref({ state: 'Hoy', abbr: 'T' });
 const items = [
-  { state: 'Today', abbr: 'FL' },
-  { state: 'This Month', abbr: 'GA' },
-  { state: 'This Year', abbr: 'NE' }
+  { state: 'Hoy', abbr: 'T' },
+  { state: 'Este Mes', abbr: 'M' },
+  { state: 'Este Año', abbr: 'A' }
 ];
 
 // chart 1
-const chartOptions1 = computed(() => {
-  return {
-    chart: {
-      type: 'bar',
-      height: 480,
-      fontFamily: `inherit`,
-      foreColor: '#a1aab2',
-      stacked: true
-    },
-    colors: ['#eef2f6', '#1e88e5', '#5e35b1', '#ede7f6'],
-    responsive: [
-      {
-        breakpoint: 480,
-        options: {
-          legend: {
-            position: 'bottom',
-            offsetX: -10,
-            offsetY: 0
-          }
-        }
-      }
-    ],
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        columnWidth: '50%'
-      }
-    },
-    xaxis: {
-      type: 'category',
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    },
-    legend: {
-      show: true,
-      fontFamily: `'Roboto', sans-serif`,
-      position: 'bottom',
-      offsetX: 20,
-      labels: {
-        useSeriesColors: false
-      },
-      markers: {
-        width: 16,
-        height: 16,
-        radius: 5
-      },
-      itemMargin: {
-        horizontal: 15,
-        vertical: 8
-      }
-    },
-    fill: {
-      type: 'solid'
-    },
-    dataLabels: {
-      enabled: false
-    },
-    grid: {
-      show: true
-    },
-    tooltip: {
-      theme: 'dark'
-    }
-  };
-});
-
-// chart 1
-const lineChart1 = {
+const lineChart1: Ref<any> = ref({
+  total: 0,
   series: [
     {
-      name: 'Investment',
-      data: [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 75]
+      name: 'Total',
+      data: []
     },
     {
-      name: 'Loss',
-      data: [35, 15, 15, 35, 65, 40, 80, 25, 15, 85, 25, 75]
-    },
-    {
-      name: 'Profit',
-      data: [35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10]
-    },
-    {
-      name: 'Maintenance',
-      data: [0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0]
+      name: 'Cantidad',
+      data: []
     }
   ]
-};
+});
+const total = computed(() => lineChart1.value.total.toLocaleString())
+
+
+const updateshart = async () => {
+  await api.get(`getTotalOrder/${select.value.abbr}`)
+  const _data = api.getData()
+
+  lineChart1.value.total = 0;
+  lineChart1.value.series[0].data = [];
+  lineChart1.value.series[1].data = [];
+  chartOptions1.value.xaxis.categories = []
+  //total.value=0
+  if (_data.length > 0) {
+    lineChart1.value.total = _data[0].Total
+    lineChart1.value.series[0].data = _data[0].Values
+    lineChart1.value.series[1].data = _data[0].Counts
+    chartOptions1.value.xaxis.categories = _data[0].Categories
+  }
+}
+updateshart()
+watch(select, async () => {
+  updateshart()
+})
 </script>
 
 <template>
@@ -103,23 +126,12 @@ const lineChart1 = {
       <v-card-text>
         <v-row>
           <v-col cols="12" sm="9">
-            <span class="text-subtitle-2 text-disabled font-weight-bold">Total Growth</span>
-            <h3 class="text-h3 mt-1">$2,324.00</h3>
+            <span class="text-subtitle-2 text-disabled font-weight-bold">Total Pedidos</span>
+            <h3 class="text-h3 mt-1">$ {{ total }}</h3>
           </v-col>
           <v-col cols="12" sm="3">
-            <v-select
-              color="primary"
-              variant="outlined"
-              hide-details
-              v-model="select"
-              :items="items"
-              item-title="state"
-              item-value="abbr"
-              label="Select"
-              persistent-hint
-              return-object
-              single-line
-            >
+            <v-select color="primary" variant="outlined" hide-details v-model="select" :items="items" item-title="state"
+              item-value="abbr" label="Select" persistent-hint return-object single-line>
             </v-select>
           </v-col>
         </v-row>

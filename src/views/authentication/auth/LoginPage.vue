@@ -1,6 +1,12 @@
 <script setup lang="ts">
-import Logo from '@/layouts/full/logo/LogoDark.vue';
+// import Logo from '@/layouts/full/logo/LogoDark.vue';
 import AuthLogin from '../authForms/AuthLogin.vue';
+import { ref } from "vue"
+let classform = ref('475px')
+const updateclass = (val: string) => {
+  
+   classform.value = val 
+}
 </script>
 
 <template>
@@ -8,12 +14,12 @@ import AuthLogin from '../authForms/AuthLogin.vue';
     <!---Left Part-->
     <v-col cols="12" class="d-flex align-center bg-lightprimary">
       <v-container>
-        <div class="pa-7 pa-sm-12">
+        <div class="pa-8 pa-sm-12">
           <v-row justify="center">
             <v-col cols="12" lg="10" xl="6" md="7">
-              <v-card elevation="0" class="loginBox">
+              <v-card elevation="9" class="loginBox">
                 <v-card variant="outlined">
-                  <v-card-text class="pa-9">
+                  <v-card-text class="pa-6">
                     <!---Left Part Logo -->
                     <!-- <v-row>
                       <v-col cols="12" class="text-center">
@@ -24,7 +30,7 @@ import AuthLogin from '../authForms/AuthLogin.vue';
                     </v-row> -->
                     <!---Left Part Logo -->
                     <!---Left Part Form-->
-                    <AuthLogin />
+                    <AuthLogin v-on:update:classlayout="updateclass" />
                     <!---Left Part Form-->
                   </v-card-text>
                 </v-card>
@@ -39,7 +45,12 @@ import AuthLogin from '../authForms/AuthLogin.vue';
 </template>
 <style lang="scss">
 .loginBox {
-  max-width: 475px;
+  max-width: v-bind(classform);
+  margin: 0 auto;
+}
+
+.selectCompanyBox {
+  max-width: 100%;
   margin: 0 auto;
 }
 </style>

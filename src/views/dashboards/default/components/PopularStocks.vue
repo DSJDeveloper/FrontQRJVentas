@@ -98,13 +98,13 @@ const revenues = ref([
               <v-sheet rounded="md" width="150" class="elevation-10">
                 <v-list>
                   <v-list-item value="1">
-                    <v-list-item-title>Today</v-list-item-title>
+                    <v-list-item-title>Hoy</v-list-item-title>
                   </v-list-item>
                   <v-list-item value="2">
-                    <v-list-item-title>This Month</v-list-item-title>
+                    <v-list-item-title>Este Mes</v-list-item-title>
                   </v-list-item>
                   <v-list-item value="3">
-                    <v-list-item-title>This Year</v-list-item-title>
+                    <v-list-item-title>Este Año</v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-sheet>

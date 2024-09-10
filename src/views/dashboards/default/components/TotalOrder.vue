@@ -1,123 +1,134 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import BaseApiServices from '@/services/BaseApiServices';
+import { ref, computed, type Ref } from 'vue';
 import { ArrowDownLeftCircleIcon, ShoppingCartIcon, CircleArrowDownLeftIcon } from 'vue-tabler-icons';
-
+let total: Ref<number> = ref(0);
 const tab = ref('1');
 
-const chartOptions1 = computed(() => {
-  return {
-    chart: {
-      type: 'bar',
-      height: 90,
-      fontFamily: `inherit`,
-      foreColor: '#a1aab2',
-      sparkline: {
-        enabled: true
-      }
-    },
-    dataLabels: {
-      enabled: false
-    },
-    colors: ['#fff'],
-    fill: {
-      type: 'solid',
-      opacity: 1
-    },
-    stroke: {
-      curve: 'smooth',
-      width: 3
-    },
-    yaxis: {
-      min: 0,
-      max: 100
-    },
-    tooltip: {
-      theme: 'dark',
-      fixed: {
-        enabled: false
-      },
-      x: {
-        show: false
-      },
-      y: {
-        title: {
-          formatter: () => 'Total Order'
-        }
-      },
-      marker: {
-        show: false
-      }
-    }
-  };
-});
+const api = new BaseApiServices('DashboardOrder')
+const gettotals = async () => {
+  await api.get('getTotalOrder/T')
+  const _data = api.getData()
+  total.value=0
+  if (_data.length > 0) {
+    total.value = _data[0].Total
+  }
+}
+gettotals()
+// const chartOptions1 = computed(() => {
+//   return {
+//     chart: {
+//       type: 'bar',
+//       height: 90,
+//       fontFamily: `inherit`,
+//       foreColor: '#a1aab2',
+//       sparkline: {
+//         enabled: true
+//       }
+//     },
+//     dataLabels: {
+//       enabled: false
+//     },
+//     colors: ['#fff'],
+//     fill: {
+//       type: 'solid',
+//       opacity: 1
+//     },
+//     stroke: {
+//       curve: 'smooth',
+//       width: 3
+//     },
+//     yaxis: {
+//       min: 0,
+//       max: 100
+//     },
+//     tooltip: {
+//       theme: 'dark',
+//       fixed: {
+//         enabled: false
+//       },
+//       x: {
+//         show: false
+//       },
+//       y: {
+//         title: {
+//           formatter: () => 'Total Order'
+//         }
+//       },
+//       marker: {
+//         show: false
+//       }
+//     }
+//   };
+// });
 
-// chart 1
-const lineChart1 = {
-  series: [
-    {
-      name: 'series1',
-      data: [45, 66, 41, 89, 25, 44, 9, 54]
-    }
-  ]
-};
+// // chart 1
+// const lineChart1 = {
+//   series: [
+//     {
+//       name: 'series1',
+//       data: [45, 66, 41, 89, 25, 44, 9, 54]
+//     }
+//   ]
+// };
 
 // chart 2
-const chartOptions2 = computed(() => {
-  return {
-    chart: {
-      type: 'bar',
-      height: 90,
-      fontFamily: `inherit`,
-      foreColor: '#a1aab2',
-      sparkline: {
-        enabled: true
-      }
-    },
-    dataLabels: {
-      enabled: false
-    },
-    colors: ['#fff'],
-    fill: {
-      type: 'solid',
-      opacity: 1
-    },
-    stroke: {
-      curve: 'smooth',
-      width: 3
-    },
-    yaxis: {
-      min: 0,
-      max: 100
-    },
-    tooltip: {
-      theme: 'dark',
-      fixed: {
-        enabled: false
-      },
-      x: {
-        show: false
-      },
-      y: {
-        title: {
-          formatter: () => 'Total Order'
-        }
-      },
-      marker: {
-        show: false
-      }
-    }
-  };
-});
+// const chartOptions2 = computed(() => {
+//   return {
+//     chart: {
+//       type: 'bar',
+//       height: 90,
+//       fontFamily: `inherit`,
+//       foreColor: '#a1aab2',
+//       sparkline: {
+//         enabled: true
+//       }
+//     },
+//     dataLabels: {
+//       enabled: false
+//     },
+//     colors: ['#fff'],
+//     fill: {
+//       type: 'solid',
+//       opacity: 1
+//     },
+//     stroke: {
+//       curve: 'smooth',
+//       width: 3
+//     },
+//     yaxis: {
+//       min: 0,
+//       max: 100
+//     },
+//     tooltip: {
+//       theme: 'dark',
+//       fixed: {
+//         enabled: false
+//       },
+//       x: {
+//         show: false
+//       },
+//       y: {
+//         title: {
+//           formatter: () => 'Total Order'
+//         }
+//       },
+//       marker: {
+//         show: false
+//       }
+//     }
+//   };
+// });
 
-// chart 1
-const lineChart2 = {
-  series: [
-    {
-      name: 'series1',
-      data: [35, 44, 9, 54, 45, 66, 41, 69]
-    }
-  ]
-};
+// // chart 1
+// const lineChart2 = {
+//   series: [
+//     {
+//       name: 'series1',
+//       data: [35, 44, 9, 54, 45, 66, 41, 69]
+//     }
+//   ]
+// };
 </script>
 
 <template>
@@ -129,8 +140,8 @@ const lineChart2 = {
         </v-btn>
         <div class="ml-auto z-1">
           <v-tabs v-model="tab" class="theme-tab" density="compact" align-tabs="end">
-            <v-tab value="1" hide-slider color="transparent">Month</v-tab>
-            <v-tab value="2" hide-slider color="transparent">Year</v-tab>
+            <v-tab value="1" hide-slider color="transparent">Hoy</v-tab>
+            <!-- <v-tab value="2" hide-slider color="transparent">Year</v-tab> -->
           </v-tabs>
         </div>
       </div>
@@ -139,19 +150,19 @@ const lineChart2 = {
           <v-row>
             <v-col cols="6">
               <h2 class="text-h1 font-weight-medium">
-                $108
+                $ <i18n-n :value="total"></i18n-n>
                 <a href="#">
                   <CircleArrowDownLeftIcon stroke-width="1.5" width="28" class="text-white" />
                 </a>
               </h2>
-              <span class="text-subtitle-1 text-medium-emphasis text-white">Total Order</span>
+              <span class="text-subtitle-1 text-medium-emphasis text-white">Total Pedidos</span>
             </v-col>
-            <v-col cols="6">
+            <!-- <v-col cols="6">
               <apexchart type="line" height="90" :options="chartOptions1" :series="lineChart1.series"> </apexchart>
-            </v-col>
+            </v-col> -->
           </v-row>
         </v-tabs-window-item>
-        <v-tabs-window-item value="2">
+        <!-- <v-tabs-window-item value="2">
           <v-row>
             <v-col cols="6">
               <h2 class="text-h1 font-weight-medium">
@@ -166,7 +177,7 @@ const lineChart2 = {
               <apexchart type="line" height="90" :options="chartOptions2" :series="lineChart2.series"> </apexchart>
             </v-col>
           </v-row>
-        </v-tabs-window-item>
+        </v-tabs-window-item> -->
       </v-tabs-window>
     </v-card-text>
   </v-card>

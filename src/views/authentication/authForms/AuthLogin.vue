@@ -6,8 +6,9 @@ import { Form } from 'vee-validate';
 import { onMounted, ref, type Ref } from 'vue';
 import AuthService from '@/services/AuthServices';
 import type { ICompanys } from '@/interfaces/ICompanys';
+
 // import type { IResultAuth } from '@/interfaces/IResultAuth';
-import { MailIcon,LockIcon } from 'vue-tabler-icons';
+import { MailIcon, LockIcon,BuildingIcon } from 'vue-tabler-icons';
 // import router from "@/router/index";
 // import type { ICompanys } from '@/interfaces/ICompanys.ts';
 // import type { IResultLogin } from '@/interfaces/IResultLogin';
@@ -41,6 +42,7 @@ const login = async (values: any, { setErrors }: any) => {
   //loading.value = true;
   try {
     step.value = 1;
+
     getTitle();
     auth.logout();
     listcompanys.value = [];
@@ -49,6 +51,7 @@ const login = async (values: any, { setErrors }: any) => {
     if (responseStatus.length <= 0) {
       listcompanys.value = auth.getCompanys();
       step.value = 2;
+
       getTitle();
     } else {
       setErrors({ apiError: responseStatus });
@@ -59,28 +62,32 @@ const login = async (values: any, { setErrors }: any) => {
     loading.value = false;
   }
 };
+
 const getTitle = () => {
   switch (step.value) {
     case 1:
       title.value = 'Acceso al Sistema';
+      updatesizeform('475px');
       break;
     case 2:
       title.value = 'Seleccione un Espacio de Trabajo';
+      updatesizeform('80%');
       break;
     case 3:
       title.value = 'Cargando Espacio de trabajo...';
+      updatesizeform('80%');
       break;
   }
 };
 const setcompany = async (el: ICompanys) => {
   step.value = 3;
-  getTitle ();
+  getTitle();
   loading.value = true;
-    try {
+  try {
     await auth.selectcompany(el._idcompany);
     const responseStatus = auth.getError().value ?? '';
-    if (responseStatus.length>0) {
-      throw  new Error(responseStatus)
+    if (responseStatus.length > 0) {
+      throw new Error(responseStatus)
       // store user details and jwt in local storage to keep user logged in between page refreshes
 
       // redirect to previous url or default to home page
@@ -99,6 +106,11 @@ onMounted(() => {
   getTitle();
   auth.logout();
 });
+const emit = defineEmits(['update:classlayout'])
+const updatesizeform = (size: string) => {
+  emit('update:classlayout', size)
+}
+
 </script>
 
 <template>
@@ -119,33 +131,13 @@ onMounted(() => {
     <v-window v-model="step">
       <v-window-item :value="1">
         <Form @submit="login" class="mt-7 loginForm" v-slot="{ errors, isSubmitting }">
-          <v-text-field
-            v-model="username"
-            :rules="emailRules"
-            :prepend-inner-icon="MailIcon"
-            label="Email  / Usuario"
-            class="mt-4 mb-8"
-            required
-            density="comfortable"
-            hide-details="auto"
-            variant="outlined"
-            color="primary"
-          ></v-text-field>
-          <v-text-field
-            v-model="password"
-            :rules="passwordRules"
-            label="Contraseña"
-            required
-            density="comfortable"
-            variant="outlined"
-            color="primary"
-            hide-details="auto"
-            :prepend-inner-icon="LockIcon"
-            :append-icon="show1 ? '$eye' : '$eyeOff'"
-            :type="show1 ? 'text' : 'password'"
-            @click:append="show1 = !show1"
-            class="pwdInput"
-          ></v-text-field>
+          <v-text-field v-model="username" :rules="emailRules" :prepend-inner-icon="MailIcon" label="Email  / Usuario"
+            class="mt-4 mb-8" required density="comfortable" hide-details="auto" variant="outlined"
+            color="primary"></v-text-field>
+          <v-text-field v-model="password" :rules="passwordRules" label="Contraseña" required density="comfortable"
+            variant="outlined" color="primary" hide-details="auto" :prepend-inner-icon="LockIcon"
+            :append-icon="show1 ? '$eye' : '$eyeOff'" :type="show1 ? 'text' : 'password'" @click:append="show1 = !show1"
+            class="pwdInput"></v-text-field>
 
           <div class="d-sm-flex align-center mt-2 mb-7 mb-sm-0">
             <!-- <v-checkbox
@@ -161,9 +153,9 @@ onMounted(() => {
         <a href="javascript:void(0)" class="text-primary text-decoration-none">Recuperar Contraseña?</a>
       </div> -->
           </div>
-          <v-btn color="secondary" :loading="isSubmitting" block class="mt-2" variant="flat" size="large" :disabled="valid" type="submit">
-            Ingresar</v-btn
-          >
+          <v-btn color="secondary" :loading="isSubmitting" block class="mt-2" variant="flat" size="large"
+            :disabled="valid" type="submit">
+            Ingresar</v-btn>
           <div v-if="errors.apiError" class="mt-2">
             <v-alert color="error">{{ errors.apiError }}</v-alert>
           </div>
@@ -171,16 +163,21 @@ onMounted(() => {
       </v-window-item>
       <v-window-item :value="2">
         <v-row dense v-if="!loading">
-          <v-col class="" v-for="ele in listcompanys" :key="ele._idcompany">
-            <v-card class="mx-auto" link :disabled="loading" @click="setcompany(ele)" variant="text">
-              <v-card-title class="text-h5 font-weight-regular justify-space-between">
+          <v-col cols="6" v-for="ele in listcompanys" :key="ele._idcompany">
+            <v-card class="mx-auto" link :disabled="loading" @click="setcompany(ele)" :title="ele.WorkSpace"
+              :subtitle="ele.NameCompany" variant="text">
+              <template v-slot:prepend>
+                <v-avatar color="">
+                  <v-icon :icon="BuildingIcon"></v-icon>
+                </v-avatar>
+              </template>
+              <!-- <v-card-title class="text-h5 font-weight-regular justify-space-between">
                 <span>{{ ele.WorkSpace }}</span>
-              </v-card-title>
-              <v-card-text>{{ ele.NameCompany }}</v-card-text>
+              </v-card-title> -->
+              <!-- <v-card-text>{{ ele.NameCompany }}</v-card-text> -->
             </v-card>
           </v-col>
-        </v-row></v-window-item
-      >
+        </v-row></v-window-item>
     </v-window>
 
     <!-- <div class="mt-5 text-right">
@@ -193,21 +190,26 @@ onMounted(() => {
 .custom-devider {
   border-color: rgba(0, 0, 0, 0.08) !important;
 }
+
 .googleBtn {
   border-color: rgba(0, 0, 0, 0.08);
   margin: 30px 0 20px 0;
 }
+
 .outlinedInput .v-field {
   border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: none;
 }
+
 .orbtn {
   padding: 2px 40px;
   border-color: rgba(0, 0, 0, 0.08);
   margin: 20px 15px;
 }
+
 .pwdInput {
   position: relative;
+
   .v-input__append {
     position: absolute;
     right: 10px;
@@ -215,6 +217,7 @@ onMounted(() => {
     transform: translateY(-50%);
   }
 }
+
 .loginForm {
   .v-text-field .v-field--active input {
     font-weight: 500;

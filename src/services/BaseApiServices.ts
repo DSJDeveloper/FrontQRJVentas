@@ -85,6 +85,22 @@ export default class BaseApiServices {
         this.data = response.data
         this.pagination = response.pagination
     }
+    async get(endpoint: string ): Promise<void> {
+
+        let url = `${this.geturl()}/${endpoint}`
+        const rest = await fetch(url, {
+            method: 'GET',
+            headers: this.getheaders()
+        })
+        const response = await rest.json()
+        if (response.errors.length > 0) {
+            this.data = []
+            throw new Error(response.errors.join("<br>"))
+        }
+
+        this.data = response.data
+
+    }
     async getbyId(id: string, endpoint?: string | null): Promise<void> {
 
         let url = `${this.geturl()}/${isNullOrEmpty(endpoint) ? this.endpointget : endpoint}/?id=${id}`
