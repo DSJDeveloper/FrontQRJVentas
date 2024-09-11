@@ -1,5 +1,5 @@
 import { createApp } from 'vue';
-import { createI18n } from 'vue-i18n'
+//import { createI18n } from 'vue-i18n'
 
 import { createPinia } from 'pinia';
 import App from './App.vue';
@@ -17,7 +17,11 @@ import { Vuetify3Dialog } from 'vuetify3-dialog'
 import print from 'vue3-print-nb';
 import i18n from './plugins/i18n';
 
+
+
+
 const app = createApp(App);
+
 // fakeBackend();
 app.use(router);
 app.use(i18n);

@@ -4,76 +4,7 @@ import BaseApiServices from '@/services/BaseApiServices';
 
 
 const api = new BaseApiServices('DashboardOrder')
-let chartOptions1: Ref<any> = ref({
-  chart: {
-    type: 'bar',
-    height: 480,
-    fontFamily: `inherit`,
-    foreColor: '#a1aab2',
-    stacked: true,
-  },
-
-  colors: ['#5e35b1', '#ede7f6'],
-  responsive: [
-    {
-      breakpoint: 480,
-      options: {
-        legend: {
-          position: 'bottom',
-          offsetX: -10,
-          offsetY: 0
-        }
-      }
-    }
-  ],
-  plotOptions: {
-    bar: {
-      horizontal: false,
-      columnWidth: '50%'
-    }
-  },
-  xaxis: {
-    type: 'category',
-    categories: [],
-  },
-  legend: {
-    show: true,
-    fontFamily: `'Roboto', sans-serif`,
-    position: 'bottom',
-    offsetX: 20,
-    labels: {
-      useSeriesColors: false
-    },
-    markers: {
-      width: 16,
-      height: 16,
-      radius: 5
-    },
-    itemMargin: {
-      horizontal: 15,
-      vertical: 8
-    }
-  },
-  fill: {
-    type: 'solid'
-  },
-  dataLabels: {
-    enabled: true,
-    enabledOnSeries: undefined,
-    formatter: function (val: number, opts: any) {
-      return val.toLocaleString()
-    }
-  },
-  grid: {
-    show: true
-  },
-  tooltip: {
-    shared: true,
-    intersect: false,
-
-    theme: 'dark'
-  }
-})
+let chartOptions1: Ref<any> = ref([{}])
 const select = ref({ state: 'Hoy', abbr: 'T' });
 const items = [
   { state: 'Hoy', abbr: 'T' },
@@ -90,7 +21,7 @@ const lineChart1: Ref<any> = ref({
       data: []
     },
     {
-      name: 'Cantidad',
+      name: 'Pedidos',
       data: []
     }
   ]
@@ -100,13 +31,84 @@ const total = computed(() => lineChart1.value.total.toLocaleString())
 
 const updateshart = async () => {
   await api.get(`getTotalOrder/${select.value.abbr}`)
+  ////////////////////
   const _data = api.getData()
-
+  ////////////////////
   lineChart1.value.total = 0;
   lineChart1.value.series[0].data = [];
   lineChart1.value.series[1].data = [];
-  chartOptions1.value.xaxis.categories = []
-  //total.value=0
+  chartOptions1.value = {
+    chart: {
+      type: 'bar',
+      height: 480,
+      fontFamily: `inherit`,
+      foreColor: '#a1aab2',
+      stacked: true,
+    },
+
+    colors: ['#5e35b1', '#ede7f6'],
+    responsive: [
+      {
+        breakpoint: 480,
+        options: {
+          legend: {
+            position: 'bottom',
+            offsetX: -10,
+            offsetY: 0
+          }
+        }
+      }
+    ],
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '50%'
+      }
+    },
+    xaxis: {
+      type: 'category',
+      categories: [],
+    },
+    legend: {
+      show: true,
+      fontFamily: `'Roboto', sans-serif`,
+      position: 'bottom',
+      offsetX: 20,
+      labels: {
+        useSeriesColors: false
+      },
+      markers: {
+        width: 16,
+        height: 16,
+        radius: 5
+      },
+      itemMargin: {
+        horizontal: 15,
+        vertical: 8
+      }
+    },
+    fill: {
+      type: 'solid'
+    },
+    dataLabels: {
+      enabled: true,
+      enabledOnSeries: undefined,
+      formatter: function (val: number, opts: any) {
+        debugger;
+        return val.toLocaleString()
+      }
+    },
+    grid: {
+      show: true
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+
+      theme: 'dark'
+    }
+  };
+  ////////////////////
   if (_data.length > 0) {
     lineChart1.value.total = _data[0].Total
     lineChart1.value.series[0].data = _data[0].Values
