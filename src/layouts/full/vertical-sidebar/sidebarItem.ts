@@ -4,7 +4,9 @@ import {
   UsersGroupIcon,
   BoxIcon,
   ListDetailsIcon,
-  BuildingIcon
+  BuildingIcon,
+  CurrencyIcon,
+  CoinsIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -49,6 +51,10 @@ const sidebarItem: menu[] = [
   {
     title: 'Vendedores',
     to: '/sellers/list'
+  },{
+    title: 'Monedas',
+    icon: CoinsIcon,
+    to: '/currencys/list'
   },
   { header: 'Usuarios' },
   {

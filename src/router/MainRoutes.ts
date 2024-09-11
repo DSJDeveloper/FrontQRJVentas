@@ -81,6 +81,12 @@ const MainRoutes = {
       path: '/workspaces/list',
       component: () => import('@/views/workspaces/ListWorkSpaces.vue')
     }
+    ,
+    {
+      name: 'ListCurrencys',
+      path: '/currencys/list',
+      component: () => import('@/views/currencys/ListCurrencys.vue')
+    }
   ]
 };
 
