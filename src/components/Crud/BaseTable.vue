@@ -9,13 +9,22 @@
         </template>
 
       </v-text-field>
-      <span v-if="_canadd">
-        <v-divider class="mx-1 " inset vertical></v-divider>
-        <v-btn class="text-success" color="success" @click="addItem">Agregar
-          
+
+      <!-- <v-divider v-if="_canadd" class="mx-1 " inset vertical></v-divider> -->
+      <v-sheet v-if="_canadd" class="ml-1 mr-1">
+        <v-btn  class="text-success" color="success" :icon="PlusIcon" @click="addItem">
+          <v-tooltip text="Agregar" activator="parent"></v-tooltip>
+          <v-icon :icon="PlusIcon"></v-icon>
         </v-btn>
-      </span>
+      </v-sheet>
+      <v-sheet class="ml-1">
+        <!-- <v-divider v-if="_canadd" class="mx-1 " inset vertical></v-divider> -->
+        <v-btn color="lightprimary" v-bind:icon="RefreshIcon" @click="onRefresh"><v-tooltip
+            text="Volver a cargar los datos" activator="parent"></v-tooltip>
+          <v-icon :icon="RefreshIcon"></v-icon></v-btn>
+      </v-sheet>
     </v-card-title>
+
 
     <v-divider></v-divider>
     <v-data-table-server ref="dtableserver" v-model:items-per-page="itemsPerPage" :headers="props.headers" :items="data"
@@ -81,7 +90,7 @@
               <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
               <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
             </svg>
-            <v-tooltip activator="parent" >Ver detalle</v-tooltip>
+            <v-tooltip activator="parent">Ver detalle</v-tooltip>
           </v-icon>
 
         </div>
@@ -95,6 +104,7 @@
 import type { IModelFilter, IModelSort, ListModelFilter } from '@/interfaces/IResultBase';
 import BaseApiServices from '@/services/BaseApiServices';
 import { computed, defineProps, onBeforeMount, ref, type Ref } from 'vue';
+import { FileIcon, PlusIcon, RefreshIcon } from 'vue-tabler-icons';
 
 
 
